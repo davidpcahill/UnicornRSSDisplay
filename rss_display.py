@@ -7,32 +7,6 @@ import re
 import os
 import gc
 
-# RSS feeds
-rss_feeds = {
-    "NASA": "https://www.nasa.gov/rss/dyn/breaking_news.rss",
-    "Mashable": "https://in.mashable.com/",
-    "The Verge": "https://www.theverge.com/rss/index.xml",
-    "WIRED": "https://www.wired.com/feed/rss",
-    "Engadget": "https://engadget.com/rss.xml",
-    "Buzzfeed": "https://www.buzzfeed.com/index.xml",
-    "Lifehacker": "https://lifehacker.com/rss",
-    "CNN": "rss.cnn.com/rss/edition.rss",
-    "HuffPostUS": "https://www.huffpost.com/section/us-news/feed",
-    "HuffPost": "https://www.huffpost.com/news/world-news/feed",
-    "BBC": "http://feeds.bbci.co.uk/news/rss.xml",
-    "Gizmodo": "https://gizmodo.com/rss",
-    "ArsTechnica": "http://feeds.arstechnica.com/arstechnica/index",
-    "TechCrunch": "https://techcrunch.com/feed",
-    "SciAmerica": "http://rss.sciam.com/ScientificAmerican-Global",
-    "RollinStone": "http://www.rollingstone.com/rss",
-    "Billboard": "https://billboard.com/feed",
-    "FoolWatch": "https://www.fool.com/feeds/foolwatch/default.aspx",
-    "FeedBurner": "http://feeds.feedburner.com/seriouseats/recipes",
-    "Forbes": "https://www.forbes.com/business/",
-    "HBR": "http://feeds.hbr.org/harvardbusiness",
-    "ESPN": "https://www.espn.com/espn/rss/news",
-}
-
 # Initialize the display
 gu = GalacticUnicorn()
 display = PicoGraphics(display=DISPLAY_GALACTIC_UNICORN)
@@ -65,6 +39,66 @@ description_font_name = "bitmap8"
 description_text_color = display.create_pen(239, 245, 191)
 description_outline_color = display.create_pen(32, 32, 32)
 description_bg_color = display.create_pen(0, 0, 0)
+
+# RSS feeds
+rss_feeds = {
+    "NASA": "https://www.nasa.gov/rss/dyn/breaking_news.rss",
+    "Mashable": "https://in.mashable.com/",
+    "The Verge": "https://www.theverge.com/rss/index.xml",
+    "WIRED": "https://www.wired.com/feed/rss",
+    "Engadget": "https://engadget.com/rss.xml",
+    # "Buzzfeed": "https://www.buzzfeed.com/index.xml",
+    "Lifehacker": "https://lifehacker.com/rss",
+    "CNN": "rss.cnn.com/rss/edition.rss",
+    "HuffPostUS": "https://www.huffpost.com/section/us-news/feed",
+    "HuffPost": "https://www.huffpost.com/news/world-news/feed",
+    "BBC": "http://feeds.bbci.co.uk/news/rss.xml",
+    # "Gizmodo": "https://gizmodo.com/rss",
+    "ArsTechnica": "http://feeds.arstechnica.com/arstechnica/index",
+    "TechCrunch": "https://techcrunch.com/feed",
+    "SciAmerica": "http://rss.sciam.com/ScientificAmerican-Global",
+    "RollinStone": "http://www.rollingstone.com/rss",
+    "Billboard": "https://billboard.com/feed",
+    "FoolWatch": "https://www.fool.com/feeds/foolwatch/default.aspx",
+    "FeedBurner": "http://feeds.feedburner.com/seriouseats/recipes",
+    "Forbes": "https://www.forbes.com/business/",
+    # "HBR": "http://feeds.hbr.org/harvardbusiness",
+    "ESPN": "https://www.espn.com/espn/rss/news",
+}
+
+
+def categorize(feed_name):
+    # Categorize each feed into a type
+    categories = {
+        "Tech": [
+            "NASA",
+            "Mashable",
+            "The Verge",
+            "WIRED",
+            "Engadget",
+            "Lifehacker",
+            "ArsTechnica",
+            "TechCrunch",
+            "Gizmodo",
+        ],
+        "News": ["CNN", "HuffPostUS", "HuffPost", "BBC"],
+        "Science": ["SciAmerica"],
+        "Entertainment": ["RollinStone", "Billboard"],
+        "Business": ["FoolWatch", "Forbes", "HBR"],
+        "Other": ["Buzzfeed", "FeedBurner", "ESPN"],
+    }
+    for category, feeds in categories.items():
+        if feed_name in feeds:
+            return category
+    return "Other"
+
+
+# Sort the dictionary by type and then alphabetically within each type
+sorted_rss_feeds = dict(
+    sorted(rss_feeds.items(), key=lambda x: (categorize(x[0]), x[0]))
+)
+
+print(sorted_rss_feeds)
 
 # Constants for scrolling
 PADDING = 10
@@ -173,6 +207,25 @@ def extract_between(data, start, end):
     return data[start_index:end_index].strip()
 
 
+def cleanup_text(text):
+    # Remove CDATA sections
+    text = remove_cdata(text)
+
+    # Replace HTML entities
+    text = replace_html_entities(text)
+
+    # Remove HTML tags
+    text = remove_html_tags(text)
+
+    # Clean up whitespace
+    text = clean_whitespace(text)
+
+    # Replace curly single quotes with straight single quotes
+    text = text.replace("‘", "'").replace("’", "'")
+
+    return text
+
+
 def remove_cdata(text):
     cdata_pattern = r"<!\[CDATA\[(.*?)\]\]>"
     return re.sub(cdata_pattern, r"\1", text)
@@ -193,13 +246,13 @@ def replace_html_entities(text):
         "&lsquo;": "'",
         "&rsquo;": "'",
         "&hellip;": "...",
-        "&euro;": "€",
-        "&pound;": "£",
-        "&yen;": "¥",
+        "&euro;": ":Euro:",
+        "&pound;": ":Pound:",
+        "&yen;": ":Yen:",
         "&#8216;": "'",
         "&#8217;": "'",
         "&#038;": "&",
-        '&#8230;': '...',
+        "&#8230;": "...",
     }
 
     for entity, replacement in replacements.items():
@@ -429,22 +482,8 @@ while True:
 
             # Step-by-step cleaning process:
             # print("\n--- Cleaning Process ---")
-            # Step 1: Remove CDATA
-            title = remove_cdata(title)
-            description = remove_cdata(description)
-            # print("\nAfter removing CDATA:\n", description)
-            # Step 2: Replace HTML entities
-            title = replace_html_entities(title)
-            description = replace_html_entities(description)
-            # print("\nAfter replacing HTML entities:\n", description)
-            # Step 3: Remove HTML tags
-            title = remove_html_tags(title)
-            description = remove_html_tags(description)
-            # print("\nAfter removing HTML tags:\n", description)
-            # Step 4: Remove Whitespace
-            title = clean_whitespace(title)
-            description = clean_whitespace(description)
-            # print("\nAfter removing Whitespace:\n", description)
+            title = cleanup_text(title)
+            description = cleanup_text(description)
             gc.collect()
 
             print(f"Displaying title: {title}")
