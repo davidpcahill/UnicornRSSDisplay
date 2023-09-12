@@ -73,6 +73,7 @@ rss_feeds = {
     # "Buzzfeed": "https://www.buzzfeed.com/index.xml",
     "ESPN": "https://www.espn.com/espn/rss/news",
     "FeedBurner": "http://feeds.feedburner.com/seriouseats/recipes",
+    "LinusTech": "https://rss.app/feeds/B5E58EisNQ6TMw0g.xml",
 }
 
 
@@ -547,6 +548,10 @@ while True:
 
     except SwitchSourceException:
         switch_source = True
+
+    except Exception as e:
+        print(f"Error fetching RSS data from {source}: {e}")
+        switch_source = True  # Switch to the next source on error
 
     # If the switch_source flag is set, move to the next source
     if switch_source:
