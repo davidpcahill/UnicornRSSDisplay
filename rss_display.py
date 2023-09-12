@@ -251,7 +251,6 @@ def remove_cdata(text):
 
 def replace_html_entities(text):
     replacements = {
-        "&nbsp;": " ",
         "&lt;": "<",
         "&gt;": ">",
         "&amp;mdash;": "—",
@@ -274,8 +273,18 @@ def replace_html_entities(text):
         "&amp;": "&",
     }
 
+    # Find and remove any encoded "html" type tags like &lt;...&gt;
+    tag_pattern = r"&lt;.*?&gt;"
+    text = re.sub(tag_pattern, "", text)
+
+    # Replace &nbsp; with a space
+    text = text.replace("&amp;nbsp;", " ")
+    text = text.replace("&nbsp;", " ")
+
+    # Replace the rest of the entities
     for entity, replacement in replacements.items():
         text = text.replace(entity, replacement)
+
     return text
 
 
