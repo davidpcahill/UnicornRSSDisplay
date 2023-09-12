@@ -18,7 +18,7 @@ This repository contains a script tailored for the Pimoroni Galactic Unicorn 53x
 1. Clone this repository to your local machine.
 2. Upload the python files to your Unicorn. (You can find the latest version of network_manager.py from https://github.com/pimoroni/pimoroni-pico/tree/main/micropython/examples/common)
 3. Edit secrets.py with your SSID and Wi-Fi password.
-4. Ensure you have enough free memory (at least 256kb).
+4. Ensure you have enough free space (at least 256kb).
 5. Run the rss_display.py script to start displaying RSS feeds on your Galactic Unicorn.
 
 ## Usage:
