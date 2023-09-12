@@ -489,6 +489,7 @@ while True:
         gc.collect()
         # items = parse_rss_data(data)
         items = parse_rss_data_from_file()
+        print(f"Total stories: {len(items)}")
         gc.collect()
 
         # Display each title and description
@@ -497,7 +498,7 @@ while True:
             print("Raw description:", description)
 
             # Step-by-step cleaning process:
-            # print("\n--- Cleaning Process ---")
+            print("Cleaning items.")
             title = cleanup_text(title)
             description = cleanup_text(description)
             gc.collect()
@@ -549,3 +550,4 @@ while True:
 
     display.set_pen(BACKGROUND_COLOR)  # Set pen to background color
     display.clear()  # Clear the display
+
