@@ -109,6 +109,7 @@ sorted_rss_feeds = dict(
 )
 
 print(sorted_rss_feeds)
+print(rss_feeds)
 
 # Constants for scrolling
 PADDING = 10
@@ -489,12 +490,15 @@ while True:
             bg_color=source_bg_color,
         )
 
+        # Clear the RSS data file before fetching new data
+        with open("rss_data.xml", "w") as f:
+            f.write("")  # Clear the file
+
         # Fetch and parse the RSS data
         print(f"Fetching RSS data from: {url}")
-        data = fetch_rss_data(url)
+        fetch_rss_data(url)
         gc.collect()
-        # items = parse_rss_data(data)
-        items = parse_rss_data_from_file()
+        items = parse_rss_data_from_file("rss_data.xml")  # Parse from the cleared file
         print(f"Total stories: {len(items)}")
         gc.collect()
 
@@ -549,13 +553,10 @@ while True:
     except SwitchSourceException:
         switch_source = True
 
-    except Exception as e:
-        print(f"Error fetching RSS data from {source}: {e}")
-        switch_source = True  # Switch to the next source on error
-
     # If the switch_source flag is set, move to the next source
     if switch_source:
         current_source_index = (current_source_index + 1) % len(rss_feeds)
+        continue  # Skip processing items for the current source
     else:
         # If all items for the current source have been displayed, move to the next source
         current_source_index = (current_source_index + 1) % len(rss_feeds)
