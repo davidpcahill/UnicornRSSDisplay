@@ -30,7 +30,7 @@ rss_feeds = {
     "FeedBurner": "http://feeds.feedburner.com/seriouseats/recipes",
     "Forbes": "https://www.forbes.com/business/",
     "HBR": "http://feeds.hbr.org/harvardbusiness",
-    "ESPN": "https://www.espn.com/espn/rss/news"
+    "ESPN": "https://www.espn.com/espn/rss/news",
 }
 
 # Initialize the display
@@ -40,7 +40,7 @@ WIDTH, HEIGHT = display.get_bounds()
 
 # Default settings
 TEXT_COLOR = display.create_pen(255, 255, 255)  # White
-OUTLINE_COLOR = display.create_pen(50, 50, 50)    # Black
+OUTLINE_COLOR = display.create_pen(50, 50, 50)  # Black
 BACKGROUND_COLOR = display.create_pen(0, 0, 0)  # Dark gray
 FONT = "bitmap8"
 display.set_font(FONT)
@@ -48,23 +48,23 @@ SCROLL_SPEED = 1  # Adjust as needed
 TIME_BETWEEN_ITEMS = 2  # Seconds
 
 # Text settings
-source_outline=True
-source_font_name="bitmap8"
-source_text_color=display.create_pen(64, 64, 127)
-source_outline_color=display.create_pen(255, 255, 255)
-source_bg_color=display.create_pen(31, 37, 59)
+source_outline = True
+source_font_name = "bitmap8"
+source_text_color = display.create_pen(64, 64, 127)
+source_outline_color = display.create_pen(255, 255, 255)
+source_bg_color = display.create_pen(31, 37, 59)
 
-title_outline=False
-title_font_name="bitmap8"
-title_text_color=display.create_pen(255, 255, 255)
-title_outline_color=display.create_pen(64, 64, 127)
-title_bg_color=display.create_pen(64, 0, 0)
+title_outline = False
+title_font_name = "bitmap8"
+title_text_color = display.create_pen(255, 255, 255)
+title_outline_color = display.create_pen(64, 64, 127)
+title_bg_color = display.create_pen(64, 0, 0)
 
-description_outline=False
-description_font_name="bitmap8"
-description_text_color=display.create_pen(239, 245, 191)
-description_outline_color=display.create_pen(32, 32, 32)
-description_bg_color=display.create_pen(0, 0, 0)
+description_outline = False
+description_font_name = "bitmap8"
+description_text_color = display.create_pen(239, 245, 191)
+description_outline_color = display.create_pen(32, 32, 32)
+description_bg_color = display.create_pen(0, 0, 0)
 
 # Constants for scrolling
 PADDING = 10
@@ -82,6 +82,7 @@ last_scroll_time = time.ticks_ms()
 
 # Define a variable to keep track of the current RSS source at the global scope
 current_source_index = 0
+
 
 def connect_to_wifi():
     try:
@@ -113,10 +114,11 @@ def connect_to_wifi():
         print("Failed to connect to WiFi.")
     return wlan.isconnected()
 
+
 def fetch_rss_data(url, filename="rss_data.xml"):
     try:
         response = requests.get(url)
-        with open(filename, 'w') as f:
+        with open(filename, "w") as f:
             f.write(response.text)
             print(f"RSS data written to {filename}.")
         response.close()
@@ -131,10 +133,11 @@ def fetch_rss_data(url, filename="rss_data.xml"):
     except Exception as e:
         print(f"Error fetching RSS data from {url}: {e}")
 
+
 def parse_rss_data_from_file(filename="rss_data.xml"):
     items = []
     try:
-        with open(filename, 'r') as f:
+        with open(filename, "r") as f:
             data = f.read()
 
         # Check if it's an Atom feed
@@ -149,69 +152,79 @@ def parse_rss_data_from_file(filename="rss_data.xml"):
 
         for item in split_data[1:]:
             title = extract_between(item, "<title>", "</title>")
-            
+
             # Extract content/description
             description = extract_between(item, tag_start, tag_end)
             if tag_start == "<content":
                 # Since <content> can have attributes, we need to further clean the content
-                description = re.sub(r'^.*?>', '', description)  # Remove everything before the closing '>'
-            
+                description = re.sub(
+                    r"^.*?>", "", description
+                )  # Remove everything before the closing '>'
+
             items.append((title, description))
     except Exception as e:
         print(f"Error parsing RSS data from file: {e}")
     return items
+
 
 def extract_between(data, start, end):
     start_index = data.find(start) + len(start)
     end_index = data.find(end)
     return data[start_index:end_index].strip()
 
+
 def remove_cdata(text):
-    cdata_pattern = r'<!\[CDATA\[(.*?)\]\]>'
-    return re.sub(cdata_pattern, r'\1', text)
+    cdata_pattern = r"<!\[CDATA\[(.*?)\]\]>"
+    return re.sub(cdata_pattern, r"\1", text)
+
 
 def replace_html_entities(text):
     replacements = {
-        '&nbsp;': ' ',
-        '&lt;': '<',
-        '&gt;': '>',
-        '&amp;mdash;': '—',
-        '&amp;ndash;': '–',
-        '&amp;': '&',
-        '&quot;': '"',
-        '&#39;': "'",
-        '&ldquo;': '"',
-        '&rdquo;': '"',
-        '&lsquo;': "'",
-        '&rsquo;': "'",
-        '&hellip;': '...',
-        '&euro;': '€',
-        '&pound;': '£',
-        '&yen;': '¥',
-        '&#8216;': "'",
-        '&#8217;': "'",
-        '&#038;': '&'
+        "&nbsp;": " ",
+        "&lt;": "<",
+        "&gt;": ">",
+        "&amp;mdash;": "—",
+        "&amp;ndash;": "–",
+        "&amp;": "&",
+        "&quot;": '"',
+        "&#39;": "'",
+        "&ldquo;": '"',
+        "&rdquo;": '"',
+        "&lsquo;": "'",
+        "&rsquo;": "'",
+        "&hellip;": "...",
+        "&euro;": "€",
+        "&pound;": "£",
+        "&yen;": "¥",
+        "&#8216;": "'",
+        "&#8217;": "'",
+        "&#038;": "&",
     }
 
     for entity, replacement in replacements.items():
         text = text.replace(entity, replacement)
     return text
 
+
 def remove_html_tags(text):
     """Remove HTML tags from a given text using a loop-based approach."""
-    while '<' in text and '>' in text:
-        start = text.find('<')
-        end = text.find('>')
+    while "<" in text and ">" in text:
+        start = text.find("<")
+        end = text.find(">")
         if start < end:
-            text = text[:start] + text[end+1:]
+            text = text[:start] + text[end + 1 :]
         else:
             break
     return text
 
+
 def clean_whitespace(text):
     """Remove excessive whitespace from a given text."""
-    text = re.sub(r'\s+', ' ', text)  # Replace multiple spaces, newlines, and tabs with a single space
+    text = re.sub(
+        r"\s+", " ", text
+    )  # Replace multiple spaces, newlines, and tabs with a single space
     return text.strip()  # Remove leading and trailing whitespace
+
 
 def get_font_height(font_name):
     font_heights = {
@@ -222,11 +235,21 @@ def get_font_height(font_name):
         "gothic": 20,
         "cursive": 20,
         "serif_italic": 20,
-        "serif": 20
+        "serif": 20,
     }
     return font_heights.get(font_name, 8)  # Default to 8 if font is not recognized
 
-def outline_text(text, x, y, scale=1, font_name="bitmap8", text_color=TEXT_COLOR, outline_color=OUTLINE_COLOR, bg_color=BACKGROUND_COLOR):
+
+def outline_text(
+    text,
+    x,
+    y,
+    scale=1,
+    font_name="bitmap8",
+    text_color=TEXT_COLOR,
+    outline_color=OUTLINE_COLOR,
+    bg_color=BACKGROUND_COLOR,
+):
     """Draws the text with an outline."""
     # Set the font
     display.set_font(font_name)
@@ -247,7 +270,17 @@ def outline_text(text, x, y, scale=1, font_name="bitmap8", text_color=TEXT_COLOR
     display.set_pen(text_color)
     display.text(text, x, y_centered, -1, scale)
 
-def display_text(text, centered=False, duration=None, outline=False, font_name="bitmap8", text_color=TEXT_COLOR, outline_color=OUTLINE_COLOR, bg_color=BACKGROUND_COLOR):
+
+def display_text(
+    text,
+    centered=False,
+    duration=None,
+    outline=False,
+    font_name="bitmap8",
+    text_color=TEXT_COLOR,
+    outline_color=OUTLINE_COLOR,
+    bg_color=BACKGROUND_COLOR,
+):
     global state, shift, last_scroll_time
 
     # Set the font
@@ -263,7 +296,7 @@ def display_text(text, centered=False, duration=None, outline=False, font_name="
         # Clear the display with the desired background color
         display.set_pen(bg_color)
         display.clear()
-        
+
         w = display.measure_text(text, 1)
         x = int(WIDTH / 2 - w / 2 + 1)
         display.set_pen(text_color)
@@ -296,23 +329,34 @@ def display_text(text, centered=False, duration=None, outline=False, font_name="
             display.set_pen(bg_color)
             display.clear()
             if outline:
-                outline_text(text, PADDING + shift, y, 1, font_name, text_color, outline_color, bg_color)
+                outline_text(
+                    text,
+                    PADDING + shift,
+                    y,
+                    1,
+                    font_name,
+                    text_color,
+                    outline_color,
+                    bg_color,
+                )
             else:
                 display.set_pen(text_color)
                 display.text(text, PADDING + shift, y, -1, 1)
             gu.update(display)
             time.sleep(STEP_TIME)
             check_buttons()  # Check for button presses during scrolling
-            
+
     elif state == STATE_POST_SCROLL:
         if time_ms - last_scroll_time > HOLD_TIME * 1000:
             state = STATE_PRE_SCROLL
             return True  # Return True to indicate that scrolling is done
     return False  # Return False to indicate that scrolling is still in progress
 
+
 # Define a custom exception for switching sources
 class SwitchSourceException(Exception):
     pass
+
 
 def check_buttons():
     global current_source_index  # Declare the variable as global inside the function
@@ -335,11 +379,14 @@ def check_buttons():
 
     if gu.is_pressed(GalacticUnicorn.SWITCH_VOLUME_DOWN):
         print("Volume down button pressed. Switching to previous RSS feed.")
-        current_source_index = (current_source_index - 1 + len(rss_feeds)) % len(rss_feeds)
+        current_source_index = (current_source_index - 1 + len(rss_feeds)) % len(
+            rss_feeds
+        )
         display.set_pen(BACKGROUND_COLOR)  # Set pen to background color
         display.clear()  # Clear the display
         gu.update(display)
         raise SwitchSourceException
+
 
 # Connect to WiFi
 wifi_available = connect_to_wifi()
@@ -355,55 +402,78 @@ while True:
     try:
         # Display the RSS source name
         print(f"Displaying source: {source}")
-        display_text(source, centered=True, duration=2, outline=source_outline, font_name=source_font_name, text_color=source_text_color, outline_color=source_outline_color, bg_color=source_bg_color)
-        
+        display_text(
+            source,
+            centered=True,
+            duration=2,
+            outline=source_outline,
+            font_name=source_font_name,
+            text_color=source_text_color,
+            outline_color=source_outline_color,
+            bg_color=source_bg_color,
+        )
+
         # Fetch and parse the RSS data
         print(f"Fetching RSS data from: {url}")
         data = fetch_rss_data(url)
         gc.collect()
-        #items = parse_rss_data(data)
+        # items = parse_rss_data(data)
         items = parse_rss_data_from_file()
         gc.collect()
-        
+
         # Display each title and description
         for title, description in items:
             print("Raw title:", title)
             print("Raw description:", description)
 
             # Step-by-step cleaning process:
-            #print("\n--- Cleaning Process ---")
+            # print("\n--- Cleaning Process ---")
             # Step 1: Remove CDATA
             title = remove_cdata(title)
             description = remove_cdata(description)
-            #print("\nAfter removing CDATA:\n", description)
+            # print("\nAfter removing CDATA:\n", description)
             # Step 2: Replace HTML entities
             title = replace_html_entities(title)
             description = replace_html_entities(description)
-            #print("\nAfter replacing HTML entities:\n", description)
+            # print("\nAfter replacing HTML entities:\n", description)
             # Step 3: Remove HTML tags
             title = remove_html_tags(title)
             description = remove_html_tags(description)
-            #print("\nAfter removing HTML tags:\n", description)
+            # print("\nAfter removing HTML tags:\n", description)
             # Step 4: Remove Whitespace
             title = clean_whitespace(title)
             description = clean_whitespace(description)
-            #print("\nAfter removing Whitespace:\n", description)
+            # print("\nAfter removing Whitespace:\n", description)
             gc.collect()
 
             print(f"Displaying title: {title}")
-            text_color=display.create_pen(255, 255, 255)
-            outline_color=display.create_pen(64, 64, 127)
-            bg_color=display.create_pen(32, 32, 64)
-            
-            while not display_text(title, outline=title_outline, font_name=title_font_name, text_color=title_text_color, outline_color=title_outline_color, bg_color=title_bg_color):
+            text_color = display.create_pen(255, 255, 255)
+            outline_color = display.create_pen(64, 64, 127)
+            bg_color = display.create_pen(32, 32, 64)
+
+            while not display_text(
+                title,
+                outline=title_outline,
+                font_name=title_font_name,
+                text_color=title_text_color,
+                outline_color=title_outline_color,
+                bg_color=title_bg_color,
+            ):
                 pass
-            
+
             print(f"Displaying description: {description}")
-            text_color=display.create_pen(255, 255, 255)
-            outline_color=display.create_pen(64, 64, 127)
-            bg_color=display.create_pen(32, 32, 64)
-            
-            while not display_text(description, outline=description_outline, font_name=description_font_name, text_color=description_text_color, outline_color=description_outline_color, bg_color=description_bg_color):
+            text_color = display.create_pen(255, 255, 255)
+            outline_color = display.create_pen(64, 64, 127)
+            bg_color = display.create_pen(32, 32, 64)
+
+            while not display_text(
+                description,
+                outline=description_outline,
+                font_name=description_font_name,
+                text_color=description_text_color,
+                outline_color=description_outline_color,
+                bg_color=description_bg_color,
+            ):
                 pass
 
             gc.collect()
@@ -420,7 +490,6 @@ while True:
     else:
         # If all items for the current source have been displayed, move to the next source
         current_source_index = (current_source_index + 1) % len(rss_feeds)
-        
+
     display.set_pen(BACKGROUND_COLOR)  # Set pen to background color
     display.clear()  # Clear the display
-
