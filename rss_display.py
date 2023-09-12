@@ -42,29 +42,41 @@ description_outline_color = display.create_pen(32, 32, 32)
 description_bg_color = display.create_pen(0, 0, 0)
 
 # RSS feeds
+# Some commented out due to memory
 rss_feeds = {
-    "NASA": "https://www.nasa.gov/rss/dyn/breaking_news.rss",
-    "Mashable": "https://in.mashable.com/",
-    "The Verge": "https://www.theverge.com/rss/index.xml",
-    "WIRED": "https://www.wired.com/feed/rss",
-    "Engadget": "https://engadget.com/rss.xml",
-    # "Buzzfeed": "https://www.buzzfeed.com/index.xml",
-    "Lifehacker": "https://lifehacker.com/rss",
-    "CNN": "rss.cnn.com/rss/edition.rss",
-    "HuffPostUS": "https://www.huffpost.com/section/us-news/feed",
-    "HuffPost": "https://www.huffpost.com/news/world-news/feed",
+    # News
     "BBC": "http://feeds.bbci.co.uk/news/rss.xml",
-    # "Gizmodo": "https://gizmodo.com/rss",
-    "ArsTechnica": "http://feeds.arstechnica.com/arstechnica/index",
+    "CNN": "rss.cnn.com/rss/edition.rss",
+    "HuffPost": "https://www.huffpost.com/news/world-news/feed",
+    "HuffPostUS": "https://www.huffpost.com/section/us-news/feed",
+    
+    # Tech
+    "Engadget": "https://engadget.com/rss.xml",
+    #"Gizmodo": "https://gizmodo.com/rss",
+    "Mashable": "https://in.mashable.com/",
+    "NASA": "https://www.nasa.gov/rss/dyn/breaking_news.rss",
+    #"ArsTechnica": "http://feeds.arstechnica.com/arstechnica/index",
     "TechCrunch": "https://techcrunch.com/feed",
+    "The Verge": "https://www.theverge.com/rss/index.xml",
+    #"WIRED": "https://www.wired.com/feed/rss",
+    #"Lifehacker": "https://lifehacker.com/rss",
+    
+    # Science
     "SciAmerica": "http://rss.sciam.com/ScientificAmerican-Global",
+    
+    # Entertainment
     "RollinStone": "http://www.rollingstone.com/rss",
-    "Billboard": "https://billboard.com/feed",
-    "FoolWatch": "https://www.fool.com/feeds/foolwatch/default.aspx",
-    "FeedBurner": "http://feeds.feedburner.com/seriouseats/recipes",
+    #"Billboard": "https://billboard.com/feed",
+    
+    # Business
     "Forbes": "https://www.forbes.com/business/",
+    #"FoolWatch": "https://www.fool.com/feeds/foolwatch/default.aspx",
     # "HBR": "http://feeds.hbr.org/harvardbusiness",
+    
+    # Other
+    #"Buzzfeed": "https://www.buzzfeed.com/index.xml",
     "ESPN": "https://www.espn.com/espn/rss/news",
+    "FeedBurner": "http://feeds.feedburner.com/seriouseats/recipes",
 }
 
 
@@ -72,7 +84,6 @@ def categorize(feed_name):
     # Categorize each feed into a type
     categories = {
         "Tech": [
-            "NASA",
             "Mashable",
             "The Verge",
             "WIRED",
@@ -83,7 +94,7 @@ def categorize(feed_name):
             "Gizmodo",
         ],
         "News": ["CNN", "HuffPostUS", "HuffPost", "BBC"],
-        "Science": ["SciAmerica"],
+        "Science": ["NASA", "SciAmerica"],
         "Entertainment": ["RollinStone", "Billboard"],
         "Business": ["FoolWatch", "Forbes", "HBR"],
         "Other": ["Buzzfeed", "FeedBurner", "ESPN"],
