@@ -278,7 +278,7 @@ def replace_html_entities(text):
 
 
 def remove_html_tags(text):
-    """Remove HTML tags from a given text using a loop-based approach."""
+    """Remove HTML tags and incomplete tags from a given text."""
     while "<" in text and ">" in text:
         start = text.find("<")
         end = text.find(">")
@@ -286,6 +286,10 @@ def remove_html_tags(text):
             text = text[:start] + text[end + 1 :]
         else:
             break
+
+    # Remove incomplete HTML tags
+    text = re.sub(r"<[^>]*$", "", text)
+
     return text
 
 
@@ -464,6 +468,7 @@ wifi_available = connect_to_wifi()
 if not wifi_available:
     print("Failed to connect to WiFi. Exiting.")
 
+
 # Main loop
 while True:
     source, url = list(rss_feeds.items())[current_source_index]
@@ -501,6 +506,8 @@ while True:
             print("Cleaning items.")
             title = cleanup_text(title)
             description = cleanup_text(description)
+            print("Clean title:", title)
+            print("Clean description:", description)
             gc.collect()
 
             print(f"Displaying title: {title}")
@@ -550,4 +557,3 @@ while True:
 
     display.set_pen(BACKGROUND_COLOR)  # Set pen to background color
     display.clear()  # Clear the display
-
