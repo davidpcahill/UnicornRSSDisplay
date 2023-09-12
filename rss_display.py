@@ -21,6 +21,7 @@ FONT = "bitmap8"
 display.set_font(FONT)
 SCROLL_SPEED = 1  # Adjust as needed
 TIME_BETWEEN_ITEMS = 2  # Seconds
+MAX_RETRIES = 5  # Define the maximum number of retries for WiFi connection
 
 # Text settings
 source_outline = True
@@ -42,39 +43,34 @@ description_outline_color = display.create_pen(32, 32, 32)
 description_bg_color = display.create_pen(0, 0, 0)
 
 # RSS feeds
-# Some commented out due to memory
+# Some commented out due to memory limits
 rss_feeds = {
     # News
     "BBC": "http://feeds.bbci.co.uk/news/rss.xml",
     "CNN": "rss.cnn.com/rss/edition.rss",
     "HuffPost": "https://www.huffpost.com/news/world-news/feed",
     "HuffPostUS": "https://www.huffpost.com/section/us-news/feed",
-    
     # Tech
-    "Engadget": "https://engadget.com/rss.xml",
-    #"Gizmodo": "https://gizmodo.com/rss",
-    "Mashable": "https://in.mashable.com/",
-    "NASA": "https://www.nasa.gov/rss/dyn/breaking_news.rss",
-    #"ArsTechnica": "http://feeds.arstechnica.com/arstechnica/index",
+    # "ArsTechnica": "http://feeds.arstechnica.com/arstechnica/index",
+    # "Engadget": "https://engadget.com/rss.xml",
+    # "Gizmodo": "https://gizmodo.com/rss",
+    # "Lifehacker": "https://lifehacker.com/rss",
+    # "Mashable": "https://in.mashable.com/",
     "TechCrunch": "https://techcrunch.com/feed",
     "The Verge": "https://www.theverge.com/rss/index.xml",
-    #"WIRED": "https://www.wired.com/feed/rss",
-    #"Lifehacker": "https://lifehacker.com/rss",
-    
+    "WIRED": "https://www.wired.com/feed/rss",
     # Science
+    "NASA": "https://www.nasa.gov/rss/dyn/breaking_news.rss",
     "SciAmerica": "http://rss.sciam.com/ScientificAmerican-Global",
-    
     # Entertainment
+    "Billboard": "https://billboard.com/feed",
     "RollinStone": "http://www.rollingstone.com/rss",
-    #"Billboard": "https://billboard.com/feed",
-    
     # Business
-    "Forbes": "https://www.forbes.com/business/",
-    #"FoolWatch": "https://www.fool.com/feeds/foolwatch/default.aspx",
-    # "HBR": "http://feeds.hbr.org/harvardbusiness",
-    
+    # "FoolWatch": "https://www.fool.com/feeds/foolwatch/default.aspx",
+    # "Forbes": "https://www.forbes.com/business/",
+    "HBR": "http://feeds.hbr.org/harvardbusiness",
     # Other
-    #"Buzzfeed": "https://www.buzzfeed.com/index.xml",
+    # "Buzzfeed": "https://www.buzzfeed.com/index.xml",
     "ESPN": "https://www.espn.com/espn/rss/news",
     "FeedBurner": "http://feeds.feedburner.com/seriouseats/recipes",
 }
@@ -138,7 +134,6 @@ def connect_to_wifi():
         print("Create secrets.py with your WiFi credentials")
         return False
 
-    print("Connecting to WiFi...")
     wlan = network.WLAN(network.STA_IF)
     if wlan.isconnected():
         print("Already connected to WiFi.")
@@ -146,20 +141,29 @@ def connect_to_wifi():
 
     wlan.active(True)
     wlan.config(pm=0xA11140)
-    wlan.connect(WIFI_SSID, WIFI_PASSWORD)
+    retries = 0
 
-    max_wait = 100
-    while max_wait > 0:
-        if wlan.status() < 0 or wlan.status() >= 3:
-            break
-        max_wait -= 1
-        time.sleep(0.2)
+    while retries < MAX_RETRIES:
+        print(f"Attempt {retries + 1} to connect to WiFi...")
+        wlan.connect(WIFI_SSID, WIFI_PASSWORD)
 
-    if wlan.isconnected():
-        print("Connected to WiFi successfully.")
-    else:
-        print("Failed to connect to WiFi.")
-    return wlan.isconnected()
+        max_wait = 100
+        while max_wait > 0:
+            if wlan.status() < 0 or wlan.status() >= 3:
+                break
+            max_wait -= 1
+            time.sleep(0.2)
+
+        if wlan.isconnected():
+            print("Connected to WiFi successfully.")
+            return True
+        else:
+            print("Failed to connect to WiFi. Retrying...")
+            retries += 1
+            time.sleep(2)  # Wait for 2 seconds before retrying
+
+    print("Failed to connect to WiFi after maximum retries.")
+    return False
 
 
 def fetch_rss_data(url, filename="rss_data.xml"):
@@ -174,7 +178,6 @@ def fetch_rss_data(url, filename="rss_data.xml"):
         file_stat = os.stat(filename)
         if file_stat[6] == 0:  # Check if the file size is 0
             print(f"Error: Unable to save RSS data from {url}. Possible space issue.")
-            exit()  # Exit the program
 
         print(f"Successfully fetched and saved RSS data from {url} to {filename}")
     except Exception as e:
@@ -224,11 +227,11 @@ def cleanup_text(text):
     # Remove CDATA sections
     text = remove_cdata(text)
 
-    # Replace HTML entities
-    text = replace_html_entities(text)
-
     # Remove HTML tags
     text = remove_html_tags(text)
+
+    # Replace HTML entities
+    text = replace_html_entities(text)
 
     # Clean up whitespace
     text = clean_whitespace(text)
@@ -251,14 +254,13 @@ def replace_html_entities(text):
         "&gt;": ">",
         "&amp;mdash;": "—",
         "&amp;ndash;": "–",
-        "&amp;": "&",
+        "&hellip;": "...",
         "&quot;": '"',
         "&#39;": "'",
         "&ldquo;": '"',
         "&rdquo;": '"',
         "&lsquo;": "'",
         "&rsquo;": "'",
-        "&hellip;": "...",
         "&euro;": ":Euro:",
         "&pound;": ":Pound:",
         "&yen;": ":Yen:",
@@ -266,6 +268,8 @@ def replace_html_entities(text):
         "&#8217;": "'",
         "&#038;": "&",
         "&#8230;": "...",
+        "&#38;": "&",
+        "&amp;": "&",
     }
 
     for entity, replacement in replacements.items():
@@ -459,7 +463,6 @@ def check_buttons():
 wifi_available = connect_to_wifi()
 if not wifi_available:
     print("Failed to connect to WiFi. Exiting.")
-    exit
 
 # Main loop
 while True:
