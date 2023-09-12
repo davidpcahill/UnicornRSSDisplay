@@ -46,6 +46,7 @@ This project is open-source and available under the MIT License. Check out the L
 
 ## Acknowledgments:
 - A big shoutout to the MicroPython community and Pimoroni for creating the Galactic Unicorn display.
+- Thanks to ChatGPT for writing 98% of this code.
 - Thanks to all contributors and users for their support and feedback.
 
 ---
