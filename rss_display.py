@@ -11,6 +11,7 @@ import gc
 gu = GalacticUnicorn()
 display = PicoGraphics(display=DISPLAY_GALACTIC_UNICORN)
 WIDTH, HEIGHT = display.get_bounds()
+gu.set_brightness(0.5)
 
 # Default settings
 TEXT_COLOR = display.create_pen(255, 255, 255)  # White
