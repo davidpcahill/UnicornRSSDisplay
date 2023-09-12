@@ -38,6 +38,9 @@ This repository contains a script tailored for the Pimoroni Galactic Unicorn 53x
 - Add or remove RSS sources by modifying the `rss_feeds` dictionary in the script.
 - Adjust display settings such as font, color, and duration to fit your preferences.
 
+## Plans:
+- Keep pushing micropython to implement urequests.iter_content and re.sub/IGNORECASE/escape so that I can solve the memory limit issues with larger RSS data sources.
+
 ## Contributing:
 Contributions are always welcome! Fork this repository and submit pull requests for any enhancements, fixes, or features you'd like to add.
 
