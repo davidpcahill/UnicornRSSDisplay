@@ -84,21 +84,22 @@ def categorize(feed_name):
     # Categorize each feed into a type
     categories = {
         "Tech": [
+            "ArsTechnica",
+            "Engadget",
+            "Gizmodo",
+            "Lifehacker",
             "Mashable",
+            "TechCrunch",
             "The Verge",
             "WIRED",
-            "Engadget",
-            "Lifehacker",
-            "ArsTechnica",
-            "TechCrunch",
-            "Gizmodo",
         ],
-        "News": ["CNN", "HuffPostUS", "HuffPost", "BBC"],
+        "News": ["BBC", "CNN", "HuffPost", "HuffPostUS"],
         "Science": ["NASA", "SciAmerica"],
-        "Entertainment": ["RollinStone", "Billboard"],
+        "Entertainment": ["Billboard", "RollinStone"],
         "Business": ["FoolWatch", "Forbes", "HBR"],
-        "Other": ["Buzzfeed", "FeedBurner", "ESPN"],
+        "Other": ["Buzzfeed", "ESPN", "FeedBurner"],
     }
+
     for category, feeds in categories.items():
         if feed_name in feeds:
             return category
