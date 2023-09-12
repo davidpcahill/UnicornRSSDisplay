@@ -24,6 +24,15 @@ This repository contains a script tailored for the Pimoroni Galactic Unicorn 53x
 - Upon starting the script, it will automatically fetch and display RSS data from the predefined sources on the Galactic Unicorn display.
 - Use the device's buttons to navigate through different RSS items and sources.
 
+## Button Functions
+
+| Button         | Function                                           |
+|----------------|----------------------------------------------------|
+| Lux (+)        | Increase brightness                                |
+| Lux (-)        | Decrease brightness                                |
+| Vol (+)        | Switch to the next RSS feed                        |
+| Vol (-)        | Switch to the previous RSS feed                    |
+
 ## Customization:
 - Add or remove RSS sources by modifying the `rss_feeds` dictionary in the script.
 - Adjust display settings such as font, color, and duration to fit your preferences.
