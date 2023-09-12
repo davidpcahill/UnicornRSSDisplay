@@ -555,10 +555,12 @@ while True:
 
     # If the switch_source flag is set, move to the next source
     if switch_source:
+        print("Forced source switch.")
         current_source_index = (current_source_index + 1) % len(rss_feeds)
         continue  # Skip processing items for the current source
     else:
         # If all items for the current source have been displayed, move to the next source
+        print("Normal source switch.")
         current_source_index = (current_source_index + 1) % len(rss_feeds)
 
     display.set_pen(BACKGROUND_COLOR)  # Set pen to background color
