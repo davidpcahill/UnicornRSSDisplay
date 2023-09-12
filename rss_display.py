@@ -229,11 +229,11 @@ def cleanup_text(text):
     # Remove CDATA sections
     text = remove_cdata(text)
 
-    # Remove HTML tags
-    text = remove_html_tags(text)
-
     # Replace HTML entities
     text = replace_html_entities(text)
+
+    # Remove HTML tags
+    text = remove_html_tags(text)
 
     # Clean up whitespace
     text = clean_whitespace(text)
@@ -263,9 +263,9 @@ def replace_html_entities(text):
         "&rdquo;": '"',
         "&lsquo;": "'",
         "&rsquo;": "'",
-        "&euro;": ":Euro:",
-        "&pound;": ":Pound:",
-        "&yen;": ":Yen:",
+        "&euro;": "€",
+        "&pound;": "£",
+        "&yen;": "¥",
         "&#8216;": "'",
         "&#8217;": "'",
         "&#038;": "&",
