@@ -199,6 +199,7 @@ def replace_html_entities(text):
         "&#8216;": "'",
         "&#8217;": "'",
         "&#038;": "&",
+        '&#8230;': '...',
     }
 
     for entity, replacement in replacements.items():
