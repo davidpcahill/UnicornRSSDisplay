@@ -17,7 +17,7 @@ This repository contains a script tailored for the Pimoroni Galactic Unicorn 53x
 ## Installation:
 1. Clone this repository to your local machine.
 2. Upload the script to your MicroPython device.
-3. Ensure you have the necessary libraries and modules installed on your device, especially those specific to the Galactic Unicorn display.
+3. Ensure you have enough free memory (at least 256kb).
 4. Run the script to start displaying RSS feeds on your Galactic Unicorn.
 
 ## Usage:
