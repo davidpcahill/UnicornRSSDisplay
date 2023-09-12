@@ -3,6 +3,7 @@
 This repository contains a script tailored for the Pimoroni Galactic Unicorn 53x11 display, allowing it to fetch and showcase RSS feed data. The script is written in MicroPython and is optimized for the unique capabilities and resolution of the Galactic Unicorn display.
 
 ## Features:
+- Over 20 popular RSS feeds added by default!
 - Fetches RSS data from multiple predefined sources.
 - Parses and cleans the RSS data for optimal display on the 53x11 resolution.
 - Provides a user interface to navigate through different RSS items and sources.
