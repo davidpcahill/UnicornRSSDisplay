@@ -40,6 +40,7 @@ This repository contains a script tailored for the Pimoroni Galactic Unicorn 53x
 
 ## Plans:
 - Keep pushing micropython to implement urequests.iter_content and re.sub/IGNORECASE/escape so that I can solve the memory limit issues with larger RSS data sources.
+- Add a flashing "BREAKING NEWS" screen to show when new stories come in from certain news sources.
 
 ## Contributing:
 Contributions are always welcome! Fork this repository and submit pull requests for any enhancements, fixes, or features you'd like to add.
